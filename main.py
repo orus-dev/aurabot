@@ -1,0 +1,63 @@
+from aura import *
+from config import *
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+aura = Aura('aura.json')
+client = discord.Client(intents=discord.Intents.all())
+# bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+tree = app_commands.CommandTree(client)
+
+@client.event
+async def on_ready():
+    print(client.user)
+    for guild in client.guilds:
+        async for member in guild.fetch_members(limit=None):
+            user = aura.get(str(member.id))
+            if user==None:
+                aura.add(str(member.id))
+    aura.save()
+    print(await tree.sync())
+
+@client.event
+async def on_message(msg: discord.Message):
+    user = aura.get(str(msg.author.id))
+    user.balance += 3
+    aura.save()
+
+@client.event
+async def on_member_join(member: discord.Member):
+    user = aura.get(str(member.id))
+    if not user:
+        user = aura.add(str(member.id))
+    member.send(embed=discord.Embed(color=member.color, title='✨ Welcome to ORUS! ✨', description=f'**Aura: {user.balance}**'))
+
+@tree.command(name='aura', description='Check the amount of aura a member has')
+async def get_aura(interaction: discord.Interaction, member: discord.Member = None):
+    aura.load()
+    if member == None:
+        member = interaction.user
+    user = aura.get(str(member.id))
+    embed = discord.Embed(color=member.color, title=f'{member.name}\'s Aura', description=user.to_md())
+    await interaction.response.send_message(embed=embed)
+
+@tree.command(name='send', description='Send aura to a member')
+async def send(interaction: discord.Interaction, to: discord.Member, amount: int):
+    aura.load()
+    user = aura.get(str(interaction.user.id))
+    user_to = aura.get(str(to.id))
+    if user.balance >= amount:
+        user.balance -= amount
+        user_to.balance += amount
+        embed = discord.Embed(
+            color=interaction.user.color,
+            description=f'**From: {interaction.user.name}\nAmount: {amount}**'
+        )
+        await to.send(embed=embed)
+        await interaction.response.send_message(f'Sent! You now have {user.balance} aura!', ephemeral=True)
+        aura.save()
+    else:
+        await interaction.response.send_message(f'Cannot send. You only have {user.balance} aura!', ephemeral=True)
+
+client.run(BOT_TOKEN)
