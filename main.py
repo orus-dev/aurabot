@@ -1,10 +1,10 @@
+import os
+env = os.environ.copy()
+print(env)
+
 from config import *
 from subprocess import run as run_start
 from threading import Thread
-
-env = os.environ.copy()
-
-print(env)
 
 run = lambda a: run_start(a, env=env)
 
