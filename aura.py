@@ -39,7 +39,7 @@ class Aura:
             return self.data[user_id]
     
     def add(self, user_id) -> User:
-        self.data[user_id] = User(10)
+        self.data[user_id] = User(100)
         return self.data[user_id]
             
     def save(self):
