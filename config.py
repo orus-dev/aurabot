@@ -1,6 +1,6 @@
 import os
 BOT_TOKEN=os.environ['BOT_TOKEN']
-USE_INVITE=os.environ['USE_INVITE']=='true'
+USE_INVITE=True
 INVITE=os.environ['INVITE']
 if not INVITE.endswith('/'):INVITE+='/'
 PUNISH_ROLES=[x.strip() for x in os.environ['PUNISH_ROLES'].split(',')]
