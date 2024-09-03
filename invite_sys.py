@@ -17,4 +17,4 @@ def invite(id):
         aura.update(user)
     return redirect(INVITE, code=302)
 
-app.run('127.0.0.1', INVITE_SERVER_PORT)
+app.run('0.0.0.0', INVITE_SERVER_PORT)
