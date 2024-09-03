@@ -4,6 +4,8 @@ from threading import Thread
 
 env = os.environ.copy()
 
+print(env)
+
 run = lambda a: run_start(a, env=env)
 
 t1 = Thread(target=run, args=(['./.venv/bin/python3', 'invite_sys.py'],))
