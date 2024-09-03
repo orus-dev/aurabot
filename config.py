@@ -1,9 +1,6 @@
 import os
 BOT_TOKEN=os.environ['BOT_TOKEN']
 USE_INVITE_SERVER=os.environ['USE_INVITE']=='true'
-INVITE_SERVER_URL='127.0.0.1'
-INVITE_SERVER_PORT=os.environ['PORT']
-INVITE=os.environ['INVITE']
 PUNISH_ROLES=(1279588925257683014,)
 REDIS_URL=os.environ['REDIS_URL']
 REDIS_USER=os.environ['REDIS_USER']
