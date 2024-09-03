@@ -1,13 +1,16 @@
 from aura import *
 from config import *
 from flask import Flask, redirect
-from os import environ
 
 aura = Aura()
 app = Flask(__name__)
 
+@app.route('/')
+def root():
+    return "ok"
+
 @app.route('/<id>')
-def root(id):
+def invite(id):
     user = aura.get(str(id))
     if user:
         user.balance+=120
