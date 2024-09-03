@@ -6,7 +6,7 @@ from threading import Thread
 import time
 
 run = lambda a: run_start(a, env=env)
-t1 = Thread(target=run, args=(['python3', 'invite_sys.py'],))
+t1 = Thread(target=run, args=(['gunicorn', 'invite_sys:app'],))
 t2 = Thread(target=run, args=(['python3', 'bot.py'],))
 t1.daemon = True
 t2.daemon = True
