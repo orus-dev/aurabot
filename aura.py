@@ -1,6 +1,6 @@
 from json import dumps, loads
 import redis
-from config import REDIS_URL
+from config import REDIS_URL, REDIS_USER, REDIS_PSW
 
 class User:
     def __init__(self, balance: int) -> None:
@@ -24,7 +24,7 @@ class Aura:
     data: dict[str, User] = {}
     def __init__(self) -> None:
         redis_host = REDIS_URL.split(':')
-        self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), decode_responses=True)
+        self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), username=REDIS_USER, password=REDIS_PSW, decode_responses=True)
         self.load()
     
     def load(self) -> None:
