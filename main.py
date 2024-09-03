@@ -31,7 +31,8 @@ async def on_member_join(member: discord.Member):
     user = aura.get(str(member.id))
     if not user:
         user = aura.add(str(member.id))
-    member.send(embed=discord.Embed(color=member.color, title='✨ Welcome to ORUS! ✨', description=f'**Aura: {user.balance}**'))
+    if USE_INVITE_SERVER:
+        member.send(embed=discord.Embed(color=member.color, title='✨ Welcome to ORUS! ✨', description=f'**Aura: {user.balance}\nInvite URL: {INVITE_SERVER_URL+member.id}\nShare this Invite URL to get 120+ aura per person**'))
 
 @tree.command(name='aura', description='Check the amount of aura a member has')
 async def get_aura(interaction: discord.Interaction, member: discord.Member = None):
