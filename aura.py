@@ -1,4 +1,6 @@
-from json import dump, load
+from json import dumps, loads
+import redis
+from config import REDIS_URL
 
 class User:
     def __init__(self, balance: int) -> None:
@@ -20,31 +22,27 @@ class User:
 
 class Aura:
     data: dict[str, User] = {}
-    file = ''
-    def __init__(self, file: str) -> None:
-        with open(file, 'r')as f:
-            self.file = file
-            data = load(f)
-            for k in data:
-                self.data[k] = User(data[k]['balance'])
+    def __init__(self) -> None:
+        redis_host = REDIS_URL.split(':')
+        self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), decode_responses=True)
+        self.load()
     
     def load(self) -> None:
-        with open(self.file, 'r')as f:
-            data = load(f)
-            for k in data:
-                self.data[k] = User(data[k]['balance'])
+        data = loads(self.r.get('data'))
+        for k in data:
+            self.data[k] = User(data[k]['balance'])
 
     def get(self, user_id) -> User | None:
         if user_id in self.data:
-            return self.data[user_id]
+            return self.r.get(str(user_id))
     
     def add(self, user_id) -> User:
         self.data[user_id] = User(100)
+        self.r.set
         return self.data[user_id]
             
     def save(self):
         data = {}
         for k in self.data:
             data[k] = self.data[k].to_dict()
-        with open(self.file, 'w')as f:
-            dump(data, f, indent=2)
+        self.r.set('data', dumps(data, indent=2))

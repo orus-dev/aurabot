@@ -1,6 +1,5 @@
 import os
 env = os.environ.copy()
-# import install
 from config import *
 from subprocess import run as run_start
 from threading import Thread
@@ -15,6 +14,3 @@ if USE_INVITE_SERVER:t1.start()
 t2.start()
 while 1:
     time.sleep(.5)
-#     # if input() == 'q':
-#     if USE_INVITE_SERVER:t1.join(0)
-#     t2.join(0)

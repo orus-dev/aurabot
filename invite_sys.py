@@ -15,4 +15,4 @@ def root(id):
         aura.save()
     return redirect(INVITE, code=302)
 
-app.run('127.0.0.1', environ['PORT'])
+app.run('127.0.0.1', INVITE_SERVER_PORT)

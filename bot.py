@@ -4,7 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-aura = Aura('aura.json')
+aura = Aura()
 client = discord.Client(intents=discord.Intents.all())
 # bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
