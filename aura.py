@@ -29,7 +29,10 @@ class Aura:
         self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), username=REDIS_USER, password=REDIS_PSW, decode_responses=True)
     
     def get(self, user_id) -> User | None:
-        return User(int(self.r.get(user_id)))
+        try:
+            return User(user_id, int(self.r.get(str(user_id))))
+        except:
+            return None
     
     def add(self, user_id) -> User:
         u = User(user_id, 100)
