@@ -17,14 +17,13 @@ async def on_ready():
             user = aura.get(str(member.id))
             if user==None:
                 aura.add(str(member.id))
-    aura.save()
     print(await tree.sync())
 
 @client.event
 async def on_message(msg: discord.Message):
     user = aura.get(str(msg.author.id))
     user.balance += 3
-    aura.save()
+    aura.update(user)
 
 @client.event
 async def on_member_join(member: discord.Member):
@@ -36,7 +35,6 @@ async def on_member_join(member: discord.Member):
 
 @tree.command(name='aura', description='Check the amount of aura a member has')
 async def get_aura(interaction: discord.Interaction, member: discord.Member = None):
-    aura.load()
     if member == None:
         member = interaction.user
     user = aura.get(str(member.id))
@@ -45,7 +43,6 @@ async def get_aura(interaction: discord.Interaction, member: discord.Member = No
 
 @tree.command(name='send', description='Send aura to a member')
 async def send(interaction: discord.Interaction, to: discord.Member, amount: int, reason: str = ""):
-    aura.load()
     user = aura.get(str(interaction.user.id))
     user_to = aura.get(str(to.id))
     if amount < 0:
@@ -61,13 +58,14 @@ async def send(interaction: discord.Interaction, to: discord.Member, amount: int
                         description=f'**By: {interaction.user.name}\nAmount: {amount}\nReason: {reason}**'
                     ))
                     await interaction.response.send_message(f'Punished! You gained 10+ aura!', ephemeral=True)
-                    aura.save()
                 else:
                     await interaction.response.send_message(f'Cannot punish. {to.name} only has {user_to.balance} aura!', ephemeral=True)
                 return
         if user.balance >= 10:
             user.balance -= 10
         await interaction.response.send_message(f'Cannot punish. You are not a developer.{" -10 aura!" if user.balance>=10 else""}', ephemeral=True)
+        aura.update(user)
+        aura.update(user_to)
         return
     else:
         if user.balance >= amount:
@@ -79,7 +77,8 @@ async def send(interaction: discord.Interaction, to: discord.Member, amount: int
                 description=f'**From: {interaction.user.name}\nAmount: {amount}**'
             ))
             await interaction.response.send_message(f'Sent! You now have {user.balance} aura!', ephemeral=True)
-            aura.save()
+            aura.update(user)
+            aura.update(user_to)
         else:
             await interaction.response.send_message(f'Cannot send. You only have {user.balance} aura!', ephemeral=True)
 
