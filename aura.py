@@ -27,7 +27,6 @@ class Aura:
     def __init__(self) -> None:
         redis_host = REDIS_URL.split(':')
         self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), username=REDIS_USER, password=REDIS_PSW, decode_responses=True)
-        self.load()
     
     def get(self, user_id) -> User | None:
         return User(int(self.r.get(user_id)))
