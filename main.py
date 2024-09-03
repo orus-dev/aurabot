@@ -1,6 +1,6 @@
 import os
 env = os.environ.copy()
-import install
+# import install
 from config import *
 from subprocess import run as run_start
 from threading import Thread
@@ -12,7 +12,7 @@ t1.daemon = True
 t2.daemon = True
 if USE_INVITE_SERVER:t1.start()
 t2.start()
-while 1:
-    if input() == 'q':
-        if USE_INVITE_SERVER:t1.join(0)
-        t2.join(0)
+# while 1:
+#     # if input() == 'q':
+#     if USE_INVITE_SERVER:t1.join(0)
+#     t2.join(0)
