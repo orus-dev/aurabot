@@ -31,8 +31,11 @@ class Aura:
         self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), username=REDIS_USER, password=REDIS_PSW, decode_responses=True)
     
     def get(self, user_id) -> User | None:
+        user_id = str(user_id)
         try:
-            return User(user_id, int(self.r.get(str(user_id))), self.last_earns[user_id] if user_id in self.last_earns else 0.0)
+            if not user_id in self.last_earns:
+                self.last_earns[user_id] = 0.0
+            return User(user_id, int(self.r.get(user_id)), self.last_earns[user_id])
         except:
             return None
     

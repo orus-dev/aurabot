@@ -24,6 +24,8 @@ async def on_message(msg: discord.Message):
     if msg.author.bot:
         return
     user = aura.get(str(msg.author.id))
+    if user==None:
+        return
     if int(time.time() - user.last_earned) >= COOLDOWN_PERIOD:
         user.balance += 3
         user.last_earned = time.time()
