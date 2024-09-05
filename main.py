@@ -3,11 +3,14 @@ from config import *
 import discord
 from discord import app_commands
 from discord.ext import commands
+import time
 
 aura = Aura()
 client = discord.Client(intents=discord.Intents.all())
 # bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
+
+COOLDOWN_PERIOD = 5
 
 @client.event
 async def on_ready():
@@ -21,16 +24,23 @@ async def on_ready():
 
 @client.event
 async def on_message(msg: discord.Message):
+    if msg.author.bot:
+        return
     user = aura.get(str(msg.author.id))
-    user.balance += 3
-    aura.update(user)
+    time_elapsed = time.time() - user.last_earned
+    print(time_elapsed)
+    if time_elapsed >= COOLDOWN_PERIOD:
+        user.balance += 3
+        user.last_earned = time.time()
+        aura.update(user)
+    await client.process_commands(msg)
 
 @client.event
 async def on_member_join(member: discord.Member):
     user = aura.get(str(member.id))
     if not user:
         user = aura.add(str(member.id))
-    await member.send(embed=discord.Embed(color=member.color, title='✨ Welcome to ORUS! ✨', description=f'**Aura: {user.balance}\nInvite URL: {INVITE+str(member.id)}\nShare this Invite URL to get 120+ aura per join!**'))
+    await member.send(embed=discord.Embed(color=member.color, title='✨ Welcome to ORUS! ✨', description=f'**Aura: {user.balance}\nInvite URL: ```{INVITE+str(member.id)}```\nShare this Invite URL for +120 aura per join!**'))
 
 @tree.command(name='aura', description='Check the amount of aura a member has')
 async def get_aura(interaction: discord.Interaction, member: discord.Member = None):
@@ -47,7 +57,7 @@ async def send(interaction: discord.Interaction, to: discord.Member, amount: int
     if amount < 0:
         amount = -amount
         for r in interaction.user.roles:
-            if r.id in PUNISH_ROLES:
+            if str(r.id) in PUNISH_ROLES:
                 if user_to.balance >= amount:
                     user_to.balance -= amount
                     user.balance += 10
