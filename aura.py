@@ -4,7 +4,7 @@ from config import REDIS_URL, REDIS_USER, REDIS_PSW
 
 class User:
     user_id: str
-    last_earned: int
+    last_earned: float = 0.0
     def __init__(self, user_id: str, balance: int) -> None:
         self.balance = balance
         self.user_id = str(user_id)
