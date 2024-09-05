@@ -25,7 +25,7 @@ class User:
         return f"**- balance: {self.balance}**"
 
 class Aura:
-    last_earns: dict[str, float]
+    last_earns: dict[str, float] = {}
     def __init__(self) -> None:
         redis_host = REDIS_URL.split(':')
         self.r = redis.Redis(host=redis_host[0], port=int(redis_host[1]), username=REDIS_USER, password=REDIS_PSW, decode_responses=True)
