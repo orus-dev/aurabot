@@ -7,10 +7,7 @@ import time
 
 aura = Aura()
 client = discord.Client(intents=discord.Intents.all())
-# bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
-
-COOLDOWN_PERIOD = 5
 
 @client.event
 async def on_ready():
@@ -27,13 +24,10 @@ async def on_message(msg: discord.Message):
     if msg.author.bot:
         return
     user = aura.get(str(msg.author.id))
-    time_elapsed = time.time() - user.last_earned
-    print(time_elapsed)
-    if time_elapsed >= COOLDOWN_PERIOD:
+    if int(time.time() - user.last_earned) >= COOLDOWN_PERIOD:
         user.balance += 3
         user.last_earned = time.time()
         aura.update(user)
-    await client.process_commands(msg)
 
 @client.event
 async def on_member_join(member: discord.Member):
