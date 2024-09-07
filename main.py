@@ -89,6 +89,6 @@ async def send(interaction: discord.Interaction, to: discord.Member, amount: int
 
 @tree.command(name='invite', description='Get the invite link and get aura')
 async def send(interaction: discord.Interaction):
-    interaction.response.send_message(f'```{INVITE+str(interaction.user.id)}```')
+    await interaction.response.send_message(f'```{INVITE+str(interaction.user.id)}```')
 
 client.run(BOT_TOKEN)
